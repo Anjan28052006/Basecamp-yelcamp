@@ -4,6 +4,7 @@ if (process.env.NODE_ENV !== "production") {
 
 const express = require('express');
 const app = express();
+app.set('trust proxy', 1);
 app.set('query parser', 'extended');
 
 const mongoose = require('mongoose');
@@ -38,12 +39,13 @@ app.use(cors({
 
 const sessionConfig = {
     name: 'session',
-    secret: 'thisissecret',
+    secret: process.env.SESSION_SECRET || 'thisissecret',
     resave: false,
     saveUninitialized: true,
     cookie: {
         httpOnly: true,
-        sameSite: 'lax',
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+        secure: process.env.NODE_ENV === 'production',
         expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
         maxAge: 1000 * 60 * 60 * 24 * 7
     }
