@@ -2,7 +2,7 @@
 
 A full-stack campground review app. Users can browse campgrounds on a map, sign up and log in, create and edit their own campground listings with photo uploads, and leave star ratings and reviews on campgrounds created by others.
 
-**Live demo:** `https://basecamp-yelcamp.vercel.app`
+**Live demo:** https://basecamp-yelcamp.vercel.app
 
 ## Tech Stack
 
