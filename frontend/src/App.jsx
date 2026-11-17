@@ -32,7 +32,7 @@ export default function App() {
         </Routes>
       </main>
       <footer className="site-footer">
-        <div className="container" style={{ display: 'flex', justifyContent: 'space-between', width: '100%', flexWrap: 'wrap', gap: 10 }}>
+        <div className="container footer-inner">
           <span>Basecamp — a campground log.</span>
           <span>Built on the trail, for the trail.</span>
         </div>

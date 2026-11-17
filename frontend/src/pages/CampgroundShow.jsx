@@ -87,7 +87,7 @@ export default function CampgroundShow() {
   const images = campground.image || [];
 
   return (
-    <div className="container" style={{ paddingBottom: 60 }}>
+    <div className="container show-container">
       <div className="page-head">
         <div className="eyebrow">{campground.location}</div>
         <h2>{campground.titel}</h2>
@@ -123,13 +123,13 @@ export default function CampgroundShow() {
               : '—')} avg ({campground.reviews?.length || 0} reviews)</span>
           </div>
 
-          <p>{campground.description}</p>
+          <p className="show-description">{campground.description}</p>
 
           <section className="reviews-section">
             <h3>Reviews</h3>
 
             {user ? (
-              <form className="form-card" style={{ marginBottom: 30, padding: 22 }} onSubmit={handleReviewSubmit}>
+              <form className="form-card review-form" onSubmit={handleReviewSubmit}>
                 {reviewError && <div className="alert alert-error">{reviewError}</div>}
                 <div className="field">
                   <label>Your rating</label>
@@ -159,7 +159,7 @@ export default function CampgroundShow() {
                 </button>
               </form>
             ) : (
-              <div className="state-block" style={{ marginBottom: 30 }}>
+              <div className="state-block review-login-prompt">
                 <Link to="/login" className="btn btn-outline">Log in to leave a review</Link>
               </div>
             )}

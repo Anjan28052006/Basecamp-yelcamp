@@ -71,11 +71,12 @@ export default function CampgroundForm({ mode }) {
   if (loading) return <div className="center-loading"><div className="spinner" /></div>;
 
   return (
-    <div className="container" style={{ paddingTop: 44, paddingBottom: 60 }}>
-      <div className="eyebrow">{isEdit ? 'Update the record' : 'New entry'}</div>
-      <h2 style={{ marginBottom: 26 }}>{isEdit ? 'Edit campground' : 'Log a new campground'}</h2>
+    <div className="container form-page-container">
+      <div className="form-page-wrap">
+        <div className="eyebrow">{isEdit ? 'Update the record' : 'New entry'}</div>
+        <h2 style={{ marginBottom: 24 }}>{isEdit ? 'Edit campground' : 'Log a new campground'}</h2>
 
-      <form className="form-card" onSubmit={handleSubmit}>
+        <form className="form-card" onSubmit={handleSubmit}>
         {error && <div className="alert alert-error">{error}</div>}
 
         <div className="field">
@@ -140,6 +141,7 @@ export default function CampgroundForm({ mode }) {
           {submitting ? 'Saving…' : isEdit ? 'Save changes' : 'Create campground'}
         </button>
       </form>
+      </div>
     </div>
   );
 }

@@ -7,7 +7,7 @@ export default function ClusterMap({ campgrounds, apiKey }) {
   const mapRef = useRef(null);
 
   useEffect(() => {
-    if (!apiKey || mapRef.current) return;
+    if (!apiKey || mapRef.current || !containerRef.current) return;
 
     maptilersdk.config.apiKey = apiKey;
 
@@ -29,9 +29,20 @@ export default function ClusterMap({ campgrounds, apiKey }) {
       style: maptilersdk.MapStyle.OUTDOOR,
       center: [-103.6, 40.7],
       zoom: 3,
-      navigationControl: false,
+      navigationControl: true,
     });
     mapRef.current = map;
+
+    const handleResize = () => {
+      if (mapRef.current) {
+        mapRef.current.resize();
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(handleResize) : null;
+    if (ro && containerRef.current) {
+      ro.observe(containerRef.current);
+    }
 
     map.on('load', () => {
       map.addSource('campgrounds', {
@@ -89,7 +100,7 @@ export default function ClusterMap({ campgrounds, apiKey }) {
       map.on('click', 'unclustered-point', (e) => {
         const { popUpMarkup } = e.features[0].properties;
         const coordinates = e.features[0].geometry.coordinates.slice();
-        new maptilersdk.Popup().setLngLat(coordinates).setHTML(popUpMarkup).addTo(map);
+        new maptilersdk.Popup({ maxWidth: '280px' }).setLngLat(coordinates).setHTML(popUpMarkup).addTo(map);
       });
 
       map.on('mouseenter', 'clusters', () => { map.getCanvas().style.cursor = 'pointer'; });
@@ -97,10 +108,12 @@ export default function ClusterMap({ campgrounds, apiKey }) {
     });
 
     return () => {
+      window.removeEventListener('resize', handleResize);
+      if (ro) ro.disconnect();
       map.remove();
       mapRef.current = null;
     };
   }, [apiKey, campgrounds]);
 
-  return <div ref={containerRef} style={{ height: 340, borderRadius: 3, overflow: 'hidden', border: '1.5px solid var(--color-line)' }} />;
+  return <div ref={containerRef} className="cluster-map-box" role="region" aria-label="Campgrounds cluster map" tabIndex={0} />;
 }

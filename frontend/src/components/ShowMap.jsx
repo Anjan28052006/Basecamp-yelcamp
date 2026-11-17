@@ -7,7 +7,7 @@ export default function ShowMap({ campground, apiKey }) {
   const mapRef = useRef(null);
 
   useEffect(() => {
-    if (!apiKey || !campground?.geometry?.coordinates || mapRef.current) return;
+    if (!apiKey || !campground?.geometry?.coordinates || mapRef.current || !containerRef.current) return;
 
     maptilersdk.config.apiKey = apiKey;
 
@@ -16,25 +16,38 @@ export default function ShowMap({ campground, apiKey }) {
       style: maptilersdk.MapStyle.OUTDOOR,
       center: campground.geometry.coordinates,
       zoom: 9,
-      navigationControl: false,
+      navigationControl: true,
       geolocateControl: false,
     });
     mapRef.current = map;
 
+    const handleResize = () => {
+      if (mapRef.current) {
+        mapRef.current.resize();
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(handleResize) : null;
+    if (ro && containerRef.current) {
+      ro.observe(containerRef.current);
+    }
+
     new maptilersdk.Marker({ color: '#B75B39' })
       .setLngLat(campground.geometry.coordinates)
       .setPopup(
-        new maptilersdk.Popup({ offset: 25 }).setHTML(
+        new maptilersdk.Popup({ offset: 25, maxWidth: '280px' }).setHTML(
           `<strong>${campground.titel}</strong><br/>${campground.location}`
         )
       )
       .addTo(map);
 
     return () => {
+      window.removeEventListener('resize', handleResize);
+      if (ro) ro.disconnect();
       map.remove();
       mapRef.current = null;
     };
   }, [apiKey, campground]);
 
-  return <div ref={containerRef} className="map-box" />;
+  return <div ref={containerRef} className="map-box" role="region" aria-label="Campground location map" tabIndex={0} />;
 }

@@ -35,9 +35,7 @@ export default function CampgroundsIndex() {
       {error && <div className="alert alert-error">{error}</div>}
 
       {!loading && camp.length > 0 && apiKey && (
-        <div style={{ marginBottom: 40 }}>
-          <ClusterMap campgrounds={camp} apiKey={apiKey} />
-        </div>
+        <ClusterMap campgrounds={camp} apiKey={apiKey} />
       )}
 
       {loading ? (
